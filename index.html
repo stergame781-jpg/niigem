@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Иргэний Боловсрол — Тест</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+Mongolian&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0b0e1a;
+    --bg2: #131729;
+    --bg3: #1c2240;
+    --card: #161b33;
+    --border: rgba(255,255,255,0.07);
+    --text: #e6eaf8;
+    --muted: #7a84a8;
+    --accent: #4f7cff;
+    --accent2: #a259ff;
+    --correct: #1ed97a;
+    --wrong: #ff4d6d;
+    --warn: #ffc94a;
+    --gold: #ffd700;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── BACKGROUND ── */
+  .bg-glow {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 60% 40% at 20% 10%, rgba(79,124,255,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 35% at 80% 80%, rgba(162,89,255,0.10) 0%, transparent 70%);
+  }
+
+  /* ── LAYOUT ── */
+  .site-wrap {
+    position: relative; z-index: 1;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 16px 60px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 0 18px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 36px;
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 17px; font-weight: 800; letter-spacing: -0.3px;
+  }
+  .nav-logo .flag { font-size: 22px; }
+  .nav-badge {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+    color: var(--accent); background: rgba(79,124,255,0.12);
+    border: 1px solid rgba(79,124,255,0.25);
+    border-radius: 100px; padding: 3px 10px;
+    text-transform: uppercase;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 20px 0 44px;
+  }
+  .hero-eyebrow {
+    font-size: 12px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .hero-eyebrow::before, .hero-eyebrow::after {
+    content: ''; flex: 1; max-width: 60px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent));
+  }
+  .hero-eyebrow::after { background: linear-gradient(90deg, var(--accent), transparent); }
+  .hero h1 {
+    font-size: clamp(28px, 6vw, 46px);
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #fff 30%, var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 14px;
+  }
+  .hero p {
+    color: var(--muted); font-size: 15px; line-height: 1.7; max-width: 480px; margin: 0 auto 28px;
+  }
+  .hero-stats {
+    display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;
+  }
+  .hero-stat {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 100px; padding: 8px 18px;
+    font-size: 13px; color: var(--muted);
+    display: flex; align-items: center; gap: 7px;
+  }
+  .hero-stat strong { color: var(--text); }
+
+  /* ── CHAPTER GRID ── */
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .chapter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 14px;
+    margin-bottom: 48px;
+  }
+  .ch-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px 20px;
+    cursor: pointer;
+    text-align: left;
+    color: var(--text);
+    font-family: inherit;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .ch-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .ch-card:hover { border-color: rgba(79,124,255,0.4); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.35); }
+  .ch-card:hover::before { opacity: 1; }
+  .ch-num {
+    font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 8px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .ch-num .roman {
+    background: rgba(79,124,255,0.15); border: 1px solid rgba(79,124,255,0.25);
+    border-radius: 6px; padding: 2px 7px; font-size: 11px;
+  }
+  .ch-title {
+    font-size: 15px; font-weight: 700; line-height: 1.4;
+    margin-bottom: 12px; color: var(--text);
+  }
+  .ch-meta {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--muted);
+  }
+  .ch-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); }
+  .ch-card.done { border-color: rgba(30,217,122,0.3); }
+  .ch-card.done::before { opacity: 1; background: linear-gradient(90deg, var(--correct), #00c9a7); }
+  .ch-score-badge {
+    position: absolute; top: 14px; right: 14px;
+    background: rgba(30,217,122,0.15); border: 1px solid rgba(30,217,122,0.3);
+    border-radius: 100px; padding: 3px 9px; font-size: 12px; font-weight: 700;
+    color: var(--correct); display: none;
+  }
+  .ch-card.done .ch-score-badge { display: block; }
+
+  /* ── QUIZ AREA ── */
+  #quiz-area { display: none; }
+
+  .quiz-header {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 16px; padding: 20px 24px; margin-bottom: 18px;
+  }
+  .quiz-breadcrumb {
+    font-size: 12px; color: var(--muted); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .quiz-breadcrumb span { color: var(--accent); font-weight: 600; }
+  .quiz-chapter-title {
+    font-size: 18px; font-weight: 800; margin-bottom: 12px;
+  }
+  .progress-wrap {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .progress-track {
+    flex: 1; height: 6px; background: rgba(255,255,255,0.07); border-radius: 100px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 100px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+  }
+  .progress-text { font-size: 13px; font-weight: 700; color: var(--muted); white-space: nowrap; }
+
+  .question-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px 24px;
+    margin-bottom: 14px;
+    position: relative;
+  }
+  .q-num-label {
+    font-size: 10px; font-weight: 800; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 12px;
+  }
+  .q-text {
+    font-size: 18px; font-weight: 700; line-height: 1.55;
+    color: var(--text);
+  }
+
+  .options-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+  .opt-btn {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 15px 18px;
+    cursor: pointer; text-align: left; color: var(--text);
+    font-size: 14px; font-weight: 600; line-height: 1.5;
+    font-family: inherit; width: 100%;
+    transition: all 0.18s;
+  }
+  .opt-btn:hover:not([disabled]) {
+    background: var(--bg3); border-color: rgba(79,124,255,0.4);
+    transform: translateX(3px);
+  }
+  .opt-letter {
+    width: 32px; height: 32px; min-width: 32px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800; color: var(--muted);
+    transition: all 0.18s;
+  }
+  .opt-btn.selected { border-color: var(--accent); background: rgba(79,124,255,0.08); }
+  .opt-btn.selected .opt-letter { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .opt-btn.correct { border-color: var(--correct); background: rgba(30,217,122,0.07); }
+  .opt-btn.correct .opt-letter { background: var(--correct); color: #fff; border-color: var(--correct); }
+  .opt-btn.wrong { border-color: var(--wrong); background: rgba(255,77,109,0.07); }
+  .opt-btn.wrong .opt-letter { background: var(--wrong); color: #fff; border-color: var(--wrong); }
+  .opt-btn[disabled] { cursor: default; }
+
+  .feedback {
+    border-radius: 12px; padding: 14px 18px;
+    font-size: 14px; font-weight: 600; line-height: 1.65;
+    margin-bottom: 18px; display: none;
+    border-left: 3px solid var(--correct);
+    background: rgba(30,217,122,0.06);
+  }
+  .feedback.wrong { border-left-color: var(--wrong); background: rgba(255,77,109,0.06); }
+
+  .btn-row { display: flex; gap: 10px; }
+  .btn-back {
+    background: var(--bg2); color: var(--muted);
+    border: 1px solid var(--border); border-radius: 12px;
+    padding: 13px 20px; font-size: 14px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .btn-back:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+  .btn-main {
+    flex: 1; background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff; border: none; border-radius: 12px;
+    padding: 13px 24px; font-size: 15px; font-weight: 800;
+    cursor: pointer; font-family: inherit;
+    transition: opacity 0.15s, transform 0.15s;
+    letter-spacing: 0.2px;
+  }
+  .btn-main:hover:not(:disabled) { opacity: 0.9; transform: scale(0.99); }
+  .btn-main:disabled { opacity: 0.3; cursor: default; transform: none; }
+
+  /* ── RESULT ── */
+  #result-area { display: none; }
+  .result-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 40px 28px;
+    text-align: center; margin-bottom: 18px;
+  }
+  .result-ring-wrap { display: flex; justify-content: center; margin-bottom: 28px; }
+  .result-ring {
+    width: 130px; height: 130px; border-radius: 50%;
+    background: conic-gradient(var(--accent) 0deg, var(--accent2) var(--pct, 0deg), rgba(255,255,255,0.07) var(--pct, 0deg));
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .result-ring-inner {
+    width: 94px; height: 94px; border-radius: 50%;
+    background: var(--card);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .result-pct { font-size: 28px; font-weight: 900; letter-spacing: -1px; }
+  .result-frac { font-size: 13px; color: var(--muted); font-weight: 600; }
+  .result-emoji { font-size: 42px; margin-bottom: 10px; display: block; }
+  .result-title { font-size: 22px; font-weight: 900; margin-bottom: 8px; }
+  .result-msg { font-size: 14px; color: var(--muted); line-height: 1.6; max-width: 340px; margin: 0 auto 24px; }
+  .result-pills { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+  .pill {
+    display: flex; align-items: center; gap: 7px;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 100px; padding: 8px 16px; font-size: 13px; font-weight: 700;
+  }
+  .pill-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .result-btn-row { display: flex; gap: 10px; max-width: 340px; margin: 0 auto; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center; padding: 28px 0 0;
+    border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--muted);
+    line-height: 1.6;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .anim { animation: fadeUp 0.35s ease both; }
+
+  @media (max-width: 520px) {
+    .chapter-grid { grid-template-columns: 1fr; }
+    .q-text { font-size: 16px; }
+    nav { flex-direction: column; gap: 10px; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+<div class="site-wrap">
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">
+      <span class="flag">🇲🇳</span>
+      <span>Иргэний Боловсрол</span>
+    </div>
+    <span class="nav-badge">Дасгал Тест</span>
+  </nav>
+
+  <!-- HOME PAGE -->
+  <div id="home-area">
+    <div class="hero anim">
+      <div class="hero-eyebrow">Сурах цаг болжээ</div>
+      <h1>Иргэний Боловсролын<br>Тест</h1>
+      <p>Бүлэг сонгон тест өгч, мэдлэгээ шалгаарай. Алдсан асуултад тайлбар харагдана.</p>
+      <div class="hero-stats">
+        <div class="hero-stat">📚 <strong>5</strong> бүлэг</div>
+        <div class="hero-stat">❓ <strong>15</strong> асуулт</div>
+        <div class="hero-stat">✅ Тайлбартай</div>
+      </div>
+    </div>
+
+    <div class="section-label">Бүлгүүд</div>
+    <div class="chapter-grid" id="chapter-grid"></div>
+  </div>
+
+  <!-- QUIZ PAGE -->
+  <div id="quiz-area">
+    <div class="quiz-header anim">
+      <div class="quiz-breadcrumb">🏠 Нүүр <span id="bc-sep">›</span> <span id="bc-title"></span></div>
+      <div class="quiz-chapter-title" id="qh-title"></div>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" id="pbar"></div></div>
+        <div class="progress-text" id="ptext"></div>
+      </div>
+    </div>
+    <div id="question-wrap" class="anim"></div>
+    <div class="options-list anim" id="opts-list"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="btn-row anim">
+      <button class="btn-back" onclick="goHome()">← Буцах</button>
+      <button class="btn-main" id="btn-main" disabled onclick="handleMain()">Хариулах</button>
+    </div>
+  </div>
+
+  <!-- RESULT PAGE -->
+  <div id="result-area">
+    <div class="result-card anim">
+      <div class="result-ring-wrap">
+        <div class="result-ring" id="res-ring">
+          <div class="result-ring-inner">
+            <span class="result-pct" id="res-pct"></span>
+            <span class="result-frac" id="res-frac"></span>
+          </div>
+        </div>
+      </div>
+      <span class="result-emoji" id="res-emoji"></span>
+      <div class="result-title" id="res-title"></div>
+      <div class="result-msg" id="res-msg"></div>
+      <div class="result-pills" id="res-pills"></div>
+      <div class="result-btn-row">
+        <button class="btn-back" onclick="retryChapter()">↺ Дахин</button>
+        <button class="btn-main" onclick="goHome()">Бүлэг сонгох ↗</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Иргэний боловсролын дасгал тест &nbsp;·&nbsp; 🇲🇳 Монгол</p>
+  </footer>
+</div>
+
+<script>
+const chapters = [
+  {
+    num: "I", title: "Орон нутгийн өөрөө удирдах ёс",
+    questions: [
+      { q: "Орон нутгийн өрчин ягваад чухал вэ?", opts: ["Хүн амын тоог нэмэгдүүлэхийн тулд", "Нутгийн иргэд өөрсдийн амьдрах орчноо сайжруулах боломж олгодог учраас", "Засгийн газрын хяналтыг бэхжүүлэхийн тулд", "Татвар цуглуулах зорилгоор"], ans: 1, exp: "Орон нутгийн өрчин нь иргэдэд өөрсдийн амьдрах орчноо шийдвэрлэх, сайжруулах боломж олгодог тул чухал юм." },
+      { q: "Орон нутгийн амьдрал тулгамдаж буй асуудлыг хэрхэн ойлгох вэ?", opts: ["Зөвхөн мэдээнд тавигдсан асуудлуудыг", "Иргэд өдөр тутмын амьдралдаа тулгарч буй бодит бэрхшээлүүдийг", "Засгийн газрын статистик мэдээллийг", "Гадаад орнуудын жишээг"], ans: 1, exp: "Иргэдийн өдөр тутмын бодит бэрхшээлүүд нь орон нутгийн тулгамдсан асуудлыг хамгийн сайн харуулдаг." },
+      { q: "Орон нутгийн шийдвэрлэх хүүхдүүд хэрхэн оролцох боломжтой вэ?", opts: ["Шууд санал өгч болохгүй", "Сурагчдын зөвлөл, санаа санал гаргах замаар", "Зөвхөн насанд хүрсэн хүмүүс оролцох ёстой", "Сургуулийн гадуур оролцох боломжгүй"], ans: 1, exp: "Хүүхдүүд сурагчдын зөвлөл болон санаа санал гаргах замаар орон нутгийн шийдвэр гаргалтад оролцож болно." }
+    ]
+  },
+  {
+    num: "II", title: "Хувь хүн ба соёл",
+    questions: [
+      { q: "Бид нутийнхаа ев соёлоор бахархдаг гэдгийн утга юу вэ?", opts: ["Зөвхөн өөрийн гэсэн соёлыг дэлгэрүүлэх", "Уламжлал, түүхэн өвийг хайрлан хамгаалж, дараагийн үедээ дамжуулах", "Бусад соёлыг үгүйсгэх", "Соёлыг зөвхөн мөнгөнд хувиргах"], ans: 1, exp: "Өвөг дээдсийн уламжлал, түүхэн өвийг хайрлан хамгаалж, дараагийн үедээ дамжуулах нь соёлоороо бахархах гол утга юм." },
+      { q: "Соёл бол хэм хэмжээ мөн гэдгийг яаж ойлгох вэ?", opts: ["Соёл нь хатуу дүрэм журам", "Нийгмийн хэм хэмжээ, зан заншил нь хүмүүсийн харилцааг зохицуулдаг", "Соёл нь зөвхөн урлаг, хөгжим", "Соёл хэзээ ч өөрчлөгддөггүй"], ans: 1, exp: "Соёл дахь нийгмийн хэм хэмжээ нь хүмүүс хоорондын харилцааг зохицуулдаг тогтолцоо болдог." },
+      { q: "Соёл хэрхэн өөрчлөгддөг вэ?", opts: ["Огт өөрчлөгддөггүй", "Цаг үеийн хэрэгцээ, харилцан нөлөөллөөр аажим өөрчлөгддөг", "Зөвхөн засгийн газрын шийдвэрээр", "Маш хурдан, агшин зуур"], ans: 1, exp: "Соёл нь цаг үеийн хэрэгцээ болон янз бүрийн соёлын харилцан нөлөөлснөөр аажим өөрчлөгддөг." }
+    ]
+  },
+  {
+    num: "III", title: "Хувь хүн ба эдийн засаг",
+    questions: [
+      { q: "Орон нутгийн эдийн засгийн бутцийн талаар бид юу мэдэх вэ?", opts: ["Зөвхөн уул уурхай чухал", "Газар тариалан, үйлдвэрлэл, үйлчилгээний салбар хамтдаа эдийн засгийг бүрдүүлдэг", "Эдийн засаг зөвхөн томоохон компаниудаас хамаарна", "Орон нутгийн эдийн засаг хөгжиж чаддаггүй"], ans: 1, exp: "Газар тариалан, үйлдвэрлэл, үйлчилгээний салбар нь хамтдаа орон нутгийн эдийн засгийг бүрдүүлдэг." },
+      { q: "Орон нутгийн зах зээл ямар үүрэг гүйцэтгэдэг вэ?", opts: ["Зөвхөн хоол хүнсний наймаа", "Бараа үйлчилгээний солилцоо, хөдөлмөр эрхлэлт, орлогын эх үүсвэр болдог", "Зөвхөн ашиг олох газар", "Засгийн газрын хяналтын газар"], ans: 1, exp: "Зах зээл нь бараа үйлчилгээг солилцох, хөдөлмөр эрхлэх, орлого олох чухал газар болдог." },
+      { q: "Жижиг бизнесийн төсөл гэж юу вэ?", opts: ["Зөвхөн том компанийн нэг хэсэг", "Хувь хүн буюу жижиг бүлэг хүн бага хөрөнгөөр явуулдаг аж ахуйн үйл ажиллагаа", "Засгийн газрын мэдэлд байдаг", "Ашиг олох боломжгүй"], ans: 1, exp: "Жижиг бизнес нь хувь хүн буюу жижиг бүлэг хүн харьцангуй бага хөрөнгөөр эхлүүлж явуулдаг аж ахуйн үйл ажиллагаа юм." }
+    ]
+  },
+  {
+    num: "IV", title: "Хүний эрх ба хууль",
+    questions: [
+      { q: "Хүний эрхийн талаар тэмцэл түүхийг бутцсэн нь юу гэсэн үг вэ?", opts: ["Дайн тулааны түүх", "Хүмүүс эрхийнхээ төлөө урт удаан тэмцэж, ахиц дэвшил гаргасан туршлага", "Засгийн газар эрхийг олгосон түүх", "Зөвхөн нэг улсын түүх"], ans: 1, exp: "Хүний эрхийн тэмцлийн түүх нь хүмүүс шударга ёсны төлөө урт удаан тэмцэж, ахиц дэвшил гаргасан туршлагыг хэлдэг." },
+      { q: "Хүний эрхийн зарчмуудыг мэддэг үү?", opts: ["Тийм, бүгд мэддэг", "Ихэнх хүмүүс эрхийнхээ зарим талыг мэддэггүй байх нь бий", "Хүн бүр эрхээ бүрэн мэддэг", "Эрх мэдэх шаардлагагүй"], ans: 1, exp: "Судалгаанаас үзэхэд ихэнх хүмүүс эрхийнхээ зарим чухал талыг бүрэн мэдэхгүй байдаг." },
+      { q: "Эрх тэгш байдал ягваад чухал вэ?", opts: ["Чухал биш", "Хүн бүр адил боломж, хандлага авах нь нийгмийн шударга ёсны үндэс", "Зөвхөн хуулийн асуудал", "Зөвхөн эдийн засгийн асуудал"], ans: 1, exp: "Эрх тэгш байдал нь хүн бүрт адил боломж, хандлага олгох нийгмийн шударга ёсны үндэс суурь болдог." }
+    ]
+  },
+  {
+    num: "V", title: "Орон нутгийн удирдлага",
+    questions: [
+      { q: "Орон нутгийн удирдлагын эрх мэдэл хаанаас авдаг вэ?", opts: ["Засгийн газраас", "Тухайн нутгийн иргэдийн итгэлцэл, сонгуулиас", "Мөнгөнөөс", "Цэргийн хүчнээс"], ans: 1, exp: "Орон нутгийн удирдлагын эрх мэдэл нь иргэдийн итгэлцэл болон ардчилсан сонгуулиас эх үүсвэртэй." },
+      { q: "Орон нутгийн тулгамдаж буй асуудлыг хэрхэн шийдвэрлэх вэ?", opts: ["Зөвхөн удирдлага шийдвэрлэнэ", "Иргэд, удирдлага хамтран оролцож шийдвэрлэх", "Гадаадаас тусламж хүлээх", "Мөнгөтэй бол л шийднэ"], ans: 1, exp: "Иргэд болон удирдлага хамтран оролцох замаар орон нутгийн асуудлыг хамгийн үр дүнтэй шийдвэрлэж болно." },
+      { q: "Орон нутгийн тусгаар шийдвэр гаргахад бид хэрхэн оролцох вэ?", opts: ["Оролцох боломжгүй", "Санал өгөх, хурлд оролцох, иргэний нийгмийн байгуулллагаар дамжуулан", "Зөвхөн сонгуулиар", "Хэвлэл мэдээллээр дамжуулан"], ans: 1, exp: "Иргэд санал өгөх, хурлд оролцох, иргэний нийгмийн байгуулллагаар дамжуулан шийдвэр гаргалтад идэвхтэй оролцож болно." }
+    ]
+  }
+];
+
+const chapterScores = {};
+let curCh = null, curQ = 0, selected = null, answered = false, score = 0, correct = 0, wrong = 0;
+const letters = ['А','Б','В','Г'];
+
+// DOM refs
+const homeArea   = document.getElementById('home-area');
+const quizArea   = document.getElementById('quiz-area');
+const resultArea = document.getElementById('result-area');
+
+function show(area) {
+  homeArea.style.display   = area === 'home'   ? '' : 'none';
+  quizArea.style.display   = area === 'quiz'   ? '' : 'none';
+  resultArea.style.display = area === 'result' ? '' : 'none';
+}
+
+// ── CHAPTER GRID ──
+function renderHome() {
+  show('home');
+  const grid = document.getElementById('chapter-grid');
+  grid.innerHTML = chapters.map((ch, i) => {
+    const done = chapterScores[i] !== undefined;
+    const scoreVal = chapterScores[i];
+    return `<button class="ch-card${done?' done':''}" onclick="startChapter(${i})">
+      <div class="ch-num"><span class="roman">${ch.num}</span> БҮЛЭГ</div>
+      <div class="ch-title">${ch.title}</div>
+      <div class="ch-meta"><span>${ch.questions.length} асуулт</span><span class="ch-dot"></span><span>${done?'Дуусгасан':'Эхлэх'}</span></div>
+      ${done ? `<div class="ch-score-badge">${scoreVal}%</div>` : ''}
+    </button>`;
+  }).join('');
+}
+
+function goHome() { renderHome(); }
+
+// ── START CHAPTER ──
+function startChapter(idx) {
+  curCh = idx; curQ = 0; selected = null; answered = false; score = 0; correct = 0; wrong = 0;
+  show('quiz');
+  renderQuestion();
+}
+
+function retryChapter() { startChapter(curCh); }
+
+// ── RENDER QUESTION ──
+function renderQuestion() {
+  const ch = chapters[curCh];
+  const q  = ch.questions[curQ];
+  const total = ch.questions.length;
+
+  document.getElementById('bc-title').textContent = ch.title;
+  document.getElementById('qh-title').textContent = `${ch.num} Бүлэг — ${ch.title}`;
+  document.getElementById('pbar').style.width = (curQ / total * 100) + '%';
+  document.getElementById('ptext').textContent = `${curQ+1} / ${total}`;
+
+  selected = null; answered = false;
+
+  document.getElementById('question-wrap').innerHTML = `
+    <div class="question-card anim">
+      <div class="q-num-label">Асуулт ${curQ+1}</div>
+      <div class="q-text">${q.q}</div>
+    </div>`;
+
+  document.getElementById('opts-list').innerHTML = q.opts.map((opt, i) =>
+    `<button class="opt-btn anim" id="opt-${i}" style="animation-delay:${i*0.05}s" onclick="selectOpt(${i})">
+      <span class="opt-letter">${letters[i]}</span>
+      <span>${opt}</span>
+    </button>`
+  ).join('');
+
+  const fb = document.getElementById('feedback');
+  fb.style.display = 'none'; fb.className = 'feedback';
+
+  const btn = document.getElementById('btn-main');
+  btn.textContent = 'Хариулах'; btn.disabled = true;
+}
+
+function selectOpt(i) {
+  if (answered) return;
+  selected = i;
+  document.querySelectorAll('.opt-btn').forEach((b, j) => b.classList.toggle('selected', j === i));
+  document.getElementById('btn-main').disabled = false;
+}
+
+function handleMain() {
+  if (!answered) {
+    if (selected === null) return;
+    answered = true;
+    const q = chapters[curCh].questions[curQ];
+    document.querySelectorAll('.opt-btn').forEach((b, i) => {
+      b.disabled = true;
+      if (i === q.ans) b.classList.add('correct');
+      else if (i === selected && selected !== q.ans) b.classList.add('wrong');
+    });
+    const isRight = selected === q.ans;
+    isRight ? (score++, correct++) : wrong++;
+    const fb = document.getElementById('feedback');
+    fb.textContent = (isRight ? '✓ Зөв! ' : '✗ Буруу. ') + q.exp;
+    fb.className = 'feedback' + (isRight ? '' : ' wrong');
+    fb.style.display = 'block';
+    const isLast = curQ === chapters[curCh].questions.length - 1;
+    const btn = document.getElementById('btn-main');
+    btn.textContent = isLast ? '🏁 Дүн үзэх' : 'Дараагийн асуулт →';
+    btn.disabled = false;
+  } else {
+    curQ++;
+    if (curQ < chapters[curCh].questions.length) renderQuestion();
+    else renderResult();
+  }
+}
+
+function renderResult() {
+  const total = chapters[curCh].questions.length;
+  const pct   = Math.round(score / total * 100);
+  chapterScores[curCh] = pct;
+
+  const deg = pct / 100 * 360;
+  document.getElementById('res-ring').style.setProperty('--pct', deg + 'deg');
+  document.getElementById('res-pct').textContent  = pct + '%';
+  document.getElementById('res-frac').textContent = score + '/' + total;
+
+  const emoji = pct >= 80 ? '🎉' : pct >= 60 ? '👍' : '📖';
+  const title = pct >= 80 ? 'Маш сайн!' : pct >= 60 ? 'Сайн байна!' : 'Дахин давт';
+  const msg   = pct >= 80 ? 'Та энэ бүлгийн агуулгыг маш сайн мэддэг байна. Үргэлжлүүлээрэй!'
+              : pct >= 60 ? 'Сайн байна! Зарим асуудлыг бага зэрэг давтвал бүр сайн болно.'
+              : 'Дахин унших, давтах замаар мэдлэгээ гүнзгийрүүл.';
+
+  document.getElementById('res-emoji').textContent = emoji;
+  document.getElementById('res-title').textContent = title;
+  document.getElementById('res-msg').textContent   = msg;
+  document.getElementById('res-pills').innerHTML   =
+    `<div class="pill"><span class="pill-dot" style="background:var(--correct)"></span>Зөв: ${correct}</div>
+     <div class="pill"><span class="pill-dot" style="background:var(--wrong)"></span>Буруу: ${wrong}</div>
+     <div class="pill"><span class="pill-dot" style="background:var(--accent)"></span>Оноо: ${pct}%</div>`;
+
+  document.getElementById('pbar').style.width = '100%';
+  show('result');
+}
+
+// init
+renderHome();
+</script>
+</body>
+</html>
